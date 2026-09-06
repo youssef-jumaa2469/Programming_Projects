@@ -30,7 +30,7 @@
                 <td>@task.Description</td>
                 <td>@task.Priority</td>
                 <td>@task.Status</td>
-                <td>@task.Project.Name</td>
+                <td>@(task.Project?.Name ?? "بدون مشروع")</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@task.Id">تعديل</a>
                 </td>
