@@ -1,0 +1,40 @@
+@model IEnumerable<ProjectManagementSystem.Models.Task>
+
+@{
+    ViewData["Title"] = "المهام";
+}
+
+<h1>المهام</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">إضافة مهمة جديدة</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>العنوان</th>
+            <th>الوصف</th>
+            <th>الأولوية</th>
+            <th>الحالة</th>
+            <th>المشروع</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var task in Model)
+        {
+            <tr>
+                <td>@task.Title</td>
+                <td>@task.Description</td>
+                <td>@task.Priority</td>
+                <td>@task.Status</td>
+                <td>@task.Project.Name</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@task.Id">تعديل</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
