@@ -1,0 +1,22 @@
+﻿@model ErrorViewModel
+@{
+    ViewData["Title"] = "خطأ";
+}
+
+<section class="page-hero">
+    <div>
+        <span class="page-hero__eyebrow">تنبيه</span>
+        <h1>حدث خطأ</h1>
+        <p>تعذّر معالجة طلبك. حاول مرة أخرى لاحقاً.</p>
+    </div>
+</section>
+
+<div class="panel detail-panel">
+@if (Model.ShowRequestId)
+{
+    <p><strong>معرّف الطلب:</strong> <code>@Model.RequestId</code></p>
+}
+    <div class="form-actions">
+        <a class="btn-app btn-app--primary" asp-controller="Projects" asp-action="Index">العودة للمشاريع</a>
+    </div>
+</div>

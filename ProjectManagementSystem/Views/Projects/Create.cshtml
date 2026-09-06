@@ -1,0 +1,52 @@
+@model ProjectManagementSystem.Models.Project
+
+@{
+    ViewData["Title"] = "إضافة مشروع";
+}
+
+<section class="page-hero">
+    <div>
+        <span class="page-hero__eyebrow">مشروع جديد</span>
+        <h1>إضافة مشروع</h1>
+        <p>أدخل بيانات المشروع ثم احفظ للمتابعة.</p>
+    </div>
+</section>
+
+<div class="panel panel--form">
+    <form asp-action="Create" class="form-stack">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-field">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" placeholder="مثال: تطوير الموقع" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-field">
+            <label asp-for="Description"></label>
+            <textarea asp-for="Description" class="form-control" rows="3" placeholder="وصف مختصر للمشروع"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="form-field">
+            <label asp-for="StartDate"></label>
+            <input asp-for="StartDate" class="form-control" type="date" />
+            <span asp-validation-for="StartDate" class="text-danger"></span>
+        </div>
+
+        <div class="form-field">
+            <label asp-for="EndDate"></label>
+            <input asp-for="EndDate" class="form-control" type="date" />
+            <span asp-validation-for="EndDate" class="text-danger"></span>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-app btn-app--primary">حفظ</button>
+            <a class="btn-app btn-app--ghost" asp-action="Index">إلغاء</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

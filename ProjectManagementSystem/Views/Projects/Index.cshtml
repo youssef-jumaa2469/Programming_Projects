@@ -1,0 +1,57 @@
+@model IEnumerable<ProjectManagementSystem.Models.Project>
+
+@{
+    ViewData["Title"] = "المشاريع";
+}
+
+<section class="page-hero">
+    <div>
+        <span class="page-hero__eyebrow">لوحة المشاريع</span>
+        <h1>المشاريع</h1>
+        <p>عرض وإدارة جميع مشاريعك من مكان واحد — أضف، عدّل، أو احذف بسهولة.</p>
+    </div>
+    <a class="btn-app btn-app--primary" asp-action="Create">إضافة مشروع</a>
+</section>
+
+@if (!Model.Any())
+{
+    <div class="panel empty-state">
+        <h2>لا توجد مشاريع بعد</h2>
+        <p>ابدأ بإنشاء أول مشروع لترى التفاصيل هنا.</p>
+        <a class="btn-app btn-app--primary" asp-action="Create">إنشاء مشروع</a>
+    </div>
+}
+else
+{
+    <div class="panel">
+        <table class="projects-table">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Name)</th>
+                    <th>@Html.DisplayNameFor(model => model.Description)</th>
+                    <th>@Html.DisplayNameFor(model => model.StartDate)</th>
+                    <th>@Html.DisplayNameFor(model => model.EndDate)</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td data-label="اسم المشروع" class="project-name">@Html.DisplayFor(modelItem => item.Name)</td>
+                    <td data-label="الوصف" class="project-desc">@(string.IsNullOrWhiteSpace(item.Description) ? "—" : item.Description)</td>
+                    <td data-label="تاريخ البداية" class="project-date">@item.StartDate.ToString("yyyy/MM/dd")</td>
+                    <td data-label="تاريخ النهاية" class="project-date">@item.EndDate.ToString("yyyy/MM/dd")</td>
+                    <td data-label="الإجراءات">
+                        <div class="row-actions">
+                            <a class="btn-app btn-app--link" asp-action="Details" asp-route-id="@item.Id">تفاصيل</a>
+                            <a class="btn-app btn-app--link" asp-action="Edit" asp-route-id="@item.Id">تعديل</a>
+                            <a class="btn-app btn-app--link-danger" asp-action="Delete" asp-route-id="@item.Id">حذف</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}

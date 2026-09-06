@@ -1,0 +1,39 @@
+@model ProjectManagementSystem.Models.Project
+
+@{
+    ViewData["Title"] = "تفاصيل المشروع";
+}
+
+<section class="page-hero">
+    <div>
+        <span class="page-hero__eyebrow">عرض المشروع</span>
+        <h1>@Model.Name</h1>
+        <p>تفاصيل المشروع المحددة.</p>
+    </div>
+</section>
+
+<div class="panel detail-panel">
+    <dl class="detail-list">
+        <div>
+            <dt>@Html.DisplayNameFor(model => model.Name)</dt>
+            <dd>@Html.DisplayFor(model => model.Name)</dd>
+        </div>
+        <div>
+            <dt>@Html.DisplayNameFor(model => model.Description)</dt>
+            <dd>@(string.IsNullOrWhiteSpace(Model.Description) ? "—" : Model.Description)</dd>
+        </div>
+        <div>
+            <dt>@Html.DisplayNameFor(model => model.StartDate)</dt>
+            <dd>@Model.StartDate.ToString("yyyy/MM/dd")</dd>
+        </div>
+        <div>
+            <dt>@Html.DisplayNameFor(model => model.EndDate)</dt>
+            <dd>@Model.EndDate.ToString("yyyy/MM/dd")</dd>
+        </div>
+    </dl>
+
+    <div class="form-actions" style="margin-top: 1.5rem;">
+        <a class="btn-app btn-app--primary" asp-action="Edit" asp-route-id="@Model.Id">تعديل</a>
+        <a class="btn-app btn-app--ghost" asp-action="Index">العودة للقائمة</a>
+    </div>
+</div>

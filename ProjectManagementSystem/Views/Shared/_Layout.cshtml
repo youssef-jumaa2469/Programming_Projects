@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] · إدارة المشاريع</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Readex+Pro:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.rtl.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="app-shell">
+        <header class="site-header">
+            <div class="site-header__inner">
+                <a class="brand" asp-controller="Projects" asp-action="Index">
+                    <span class="brand__mark" aria-hidden="true"></span>
+                    <span class="brand__text">
+                        <span class="brand__name">إدارة المشاريع</span>
+                        <span class="brand__tag">نظام متابعة وتنظيم</span>
+                    </span>
+                </a>
+                <nav class="site-nav" aria-label="التنقل الرئيسي">
+                    <a class="site-nav__link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Projects" ? "is-active" : null)"
+                       asp-controller="Projects" asp-action="Index">المشاريع</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="site-main" role="main">
+            @RenderBody()
+        </main>
+
+        <footer class="site-footer">
+            <p>© @DateTime.Now.Year إدارة المشاريع — جميع الحقوق محفوظة</p>
+        </footer>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

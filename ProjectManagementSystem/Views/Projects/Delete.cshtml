@@ -1,0 +1,42 @@
+@model ProjectManagementSystem.Models.Project
+
+@{
+    ViewData["Title"] = "حذف مشروع";
+}
+
+<section class="page-hero">
+    <div>
+        <span class="page-hero__eyebrow">تأكيد الحذف</span>
+        <h1>حذف المشروع</h1>
+        <p>هذا الإجراء لا يمكن التراجع عنه.</p>
+    </div>
+</section>
+
+<div class="panel detail-panel">
+    <div class="alert-soft">هل أنت متأكد أنك تريد حذف هذا المشروع؟</div>
+
+    <dl class="detail-list">
+        <div>
+            <dt>@Html.DisplayNameFor(model => model.Name)</dt>
+            <dd>@Html.DisplayFor(model => model.Name)</dd>
+        </div>
+        <div>
+            <dt>@Html.DisplayNameFor(model => model.Description)</dt>
+            <dd>@(string.IsNullOrWhiteSpace(Model.Description) ? "—" : Model.Description)</dd>
+        </div>
+        <div>
+            <dt>@Html.DisplayNameFor(model => model.StartDate)</dt>
+            <dd>@Model.StartDate.ToString("yyyy/MM/dd")</dd>
+        </div>
+        <div>
+            <dt>@Html.DisplayNameFor(model => model.EndDate)</dt>
+            <dd>@Model.EndDate.ToString("yyyy/MM/dd")</dd>
+        </div>
+    </dl>
+
+    <form asp-action="Delete" class="form-actions" style="margin-top: 1.5rem;">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn-app btn-app--danger">تأكيد الحذف</button>
+        <a class="btn-app btn-app--ghost" asp-action="Index">إلغاء</a>
+    </form>
+</div>
