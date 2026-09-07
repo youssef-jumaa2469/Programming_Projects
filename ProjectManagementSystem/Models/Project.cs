@@ -20,5 +20,7 @@ namespace ProjectManagementSystem.Models
         [Display(Name = "تاريخ النهاية")]
         [DataType(DataType.Date)]
         public DateTime EndDate { get; set; }
+
+        public ICollection<Task> Tasks { get; set; } = new List<Task>();
     }
 }
