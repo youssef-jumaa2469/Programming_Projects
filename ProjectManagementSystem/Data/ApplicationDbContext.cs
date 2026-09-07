@@ -11,6 +11,7 @@ namespace ProjectManagementSystem.Data
             : base(options)
         {
         }
+        public DbSet<User> Users { get; set; }
 
         public DbSet<Project> Projects { get; set; }
         public DbSet<TaskModel> Tasks { get; set; }
