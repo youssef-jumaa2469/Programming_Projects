@@ -14,7 +14,7 @@
     <div class="app-shell">
         <header class="site-header">
             <div class="site-header__inner">
-                <a class="brand" asp-controller="Projects" asp-action="Index">
+                <a class="brand" asp-controller="Home" asp-action="Index">
                     <span class="brand__mark" aria-hidden="true"></span>
                     <span class="brand__text">
                         <span class="brand__name">إدارة المشاريع</span>
@@ -22,8 +22,12 @@
                     </span>
                 </a>
                 <nav class="site-nav" aria-label="التنقل الرئيسي">
+                    <a class="site-nav__link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "is-active" : null)"
+                       asp-controller="Home" asp-action="Index">لوحة الإدارة</a>
                     <a class="site-nav__link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Projects" ? "is-active" : null)"
                        asp-controller="Projects" asp-action="Index">المشاريع</a>
+                    <a class="site-nav__link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Tasks" ? "is-active" : null)"
+                       asp-controller="Tasks" asp-action="Index">المهام</a>
                 </nav>
             </div>
         </header>

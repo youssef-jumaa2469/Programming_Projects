@@ -1,0 +1,48 @@
+@model ProjectManagementSystem.Models.Task
+
+@{
+    ViewData["Title"] = "تفاصيل المهمة";
+}
+
+<section class="page-hero">
+    <div>
+        <span class="page-hero__eyebrow">عرض المهمة</span>
+        <h1>@Model.Title</h1>
+        <p>تفاصيل المهمة المحددة وارتباطها بالمشروع.</p>
+    </div>
+    <partial name="_ModuleSwitch" />
+</section>
+
+<div class="panel detail-panel">
+    <dl class="detail-list">
+        <div>
+            <dt>@Html.DisplayNameFor(model => model.Title)</dt>
+            <dd>@Model.Title</dd>
+        </div>
+        <div>
+            <dt>@Html.DisplayNameFor(model => model.Description)</dt>
+            <dd>@(string.IsNullOrWhiteSpace(Model.Description) ? "—" : Model.Description)</dd>
+        </div>
+        <div>
+            <dt>@Html.DisplayNameFor(model => model.Project)</dt>
+            <dd>@(Model.Project?.Name ?? "—")</dd>
+        </div>
+        <div>
+            <dt>@Html.DisplayNameFor(model => model.Priority)</dt>
+            <dd>
+                <span class="@WorkItemLabels.PriorityClass(Model.Priority)">@WorkItemLabels.Priority(Model.Priority)</span>
+            </dd>
+        </div>
+        <div>
+            <dt>@Html.DisplayNameFor(model => model.Status)</dt>
+            <dd>
+                <span class="@WorkItemLabels.StatusClass(Model.Status)">@WorkItemLabels.Status(Model.Status)</span>
+            </dd>
+        </div>
+    </dl>
+
+    <div class="form-actions" style="margin-top: 1.5rem;">
+        <a class="btn-app btn-app--primary" asp-action="Edit" asp-route-id="@Model.Id">تعديل</a>
+        <a class="btn-app btn-app--ghost" asp-action="Index">العودة للقائمة</a>
+    </div>
+</div>

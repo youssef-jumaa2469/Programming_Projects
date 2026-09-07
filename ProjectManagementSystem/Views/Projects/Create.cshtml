@@ -10,10 +10,15 @@
         <h1>إضافة مشروع</h1>
         <p>أدخل بيانات المشروع ثم احفظ للمتابعة.</p>
     </div>
+    <partial name="_ModuleSwitch" />
 </section>
 
 <div class="panel panel--form">
     <form asp-action="Create" class="form-stack">
+        @if (TempData["Notice"] is string notice)
+        {
+            <div class="alert-soft">@notice</div>
+        }
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         <div class="form-field">

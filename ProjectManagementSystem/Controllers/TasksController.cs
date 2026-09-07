@@ -16,28 +16,64 @@ namespace ProjectManagementSystem.Controllers
             _context = context;
         }
 
-        // GET: Tasks
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? projectId)
         {
-            var tasks = await _context.Tasks
+            var query = _context.Tasks
                 .Include(t => t.Project)
-                .ToListAsync();
+                .AsQueryable();
 
-            return View(tasks);
-        }
+            if (projectId.HasValue)
+            {
+                query = query.Where(t => t.ProjectId == projectId.Value);
+            }
 
-        // GET: Tasks/Create
-        public IActionResult Create()
-        {
-            ViewData["ProjectId"] = new SelectList(
-                _context.Projects,
+            ViewBag.ProjectId = projectId;
+            ViewBag.Projects = new SelectList(
+                await _context.Projects.OrderBy(p => p.Name).ToListAsync(),
                 "Id",
-                "Name");
+                "Name",
+                projectId);
 
-            return View();
+            return View(await query.OrderByDescending(t => t.Id).ToListAsync());
         }
 
-        // POST: Tasks/Create
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var task = await _context.Tasks
+                .Include(t => t.Project)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (task == null)
+            {
+                return NotFound();
+            }
+
+            return View(task);
+        }
+
+        public IActionResult Create(int? projectId)
+        {
+            PopulateProjects(projectId);
+
+            if (!_context.Projects.Any())
+            {
+                TempData["Notice"] = "أضف مشروعاً أولاً قبل إنشاء المهام.";
+                return RedirectToAction("Create", "Projects");
+            }
+
+            return View(new TaskModel
+            {
+                ProjectId = projectId ?? 0,
+                Priority = "متوسطة",
+                Status = "جديدة"
+            });
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
@@ -47,20 +83,13 @@ namespace ProjectManagementSystem.Controllers
             {
                 _context.Add(task);
                 await _context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { projectId = task.ProjectId });
             }
 
-            ViewData["ProjectId"] = new SelectList(
-                _context.Projects,
-                "Id",
-                "Name",
-                task.ProjectId);
-
+            PopulateProjects(task.ProjectId);
             return View(task);
         }
 
-        // GET: Tasks/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -69,22 +98,15 @@ namespace ProjectManagementSystem.Controllers
             }
 
             var task = await _context.Tasks.FindAsync(id);
-
             if (task == null)
             {
                 return NotFound();
             }
 
-            ViewData["ProjectId"] = new SelectList(
-                _context.Projects,
-                "Id",
-                "Name",
-                task.ProjectId);
-
+            PopulateProjects(task.ProjectId);
             return View(task);
         }
 
-        // POST: Tasks/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(
@@ -113,16 +135,53 @@ namespace ProjectManagementSystem.Controllers
                     throw;
                 }
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { projectId = task.ProjectId });
             }
 
-            ViewData["ProjectId"] = new SelectList(
-                _context.Projects,
-                "Id",
-                "Name",
-                task.ProjectId);
+            PopulateProjects(task.ProjectId);
+            return View(task);
+        }
+
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var task = await _context.Tasks
+                .Include(t => t.Project)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (task == null)
+            {
+                return NotFound();
+            }
 
             return View(task);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var task = await _context.Tasks.FindAsync(id);
+            if (task != null)
+            {
+                _context.Tasks.Remove(task);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private void PopulateProjects(int? selectedId)
+        {
+            ViewData["ProjectId"] = new SelectList(
+                _context.Projects.OrderBy(p => p.Name),
+                "Id",
+                "Name",
+                selectedId);
         }
 
         private bool TaskExists(int id)

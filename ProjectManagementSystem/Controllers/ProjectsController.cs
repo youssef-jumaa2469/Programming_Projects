@@ -34,6 +34,7 @@ namespace ProjectManagementSystem.Controllers
             }
 
             var project = await _context.Projects
+                .Include(p => p.Tasks)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (project == null)
             {
@@ -125,6 +126,7 @@ namespace ProjectManagementSystem.Controllers
             }
 
             var project = await _context.Projects
+                .Include(p => p.Tasks)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (project == null)
             {
@@ -139,9 +141,12 @@ namespace ProjectManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var project = await _context.Projects.FindAsync(id);
+            var project = await _context.Projects
+                .Include(p => p.Tasks)
+                .FirstOrDefaultAsync(p => p.Id == id);
             if (project != null)
             {
+                _context.Tasks.RemoveRange(project.Tasks);
                 _context.Projects.Remove(project);
             }
 

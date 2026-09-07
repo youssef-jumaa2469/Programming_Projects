@@ -1,21 +1,33 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ProjectManagementSystem.Data;
 using ProjectManagementSystem.Models;
 
 namespace ProjectManagementSystem.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly ApplicationDbContext _context;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ApplicationDbContext context)
     {
-        _logger = logger;
+        _context = context;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return RedirectToAction("Index", "Projects");
+        var tasks = await _context.Tasks.AsNoTracking().ToListAsync();
+
+        var model = new DashboardViewModel
+        {
+            ProjectsCount = await _context.Projects.CountAsync(),
+            TasksCount = tasks.Count,
+            InProgressTasksCount = tasks.Count(t => t.Status == "قيد التنفيذ" || t.Status == "In Progress"),
+            DoneTasksCount = tasks.Count(t => t.Status == "منجزة" || t.Status == "Done")
+        };
+
+        return View(model);
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

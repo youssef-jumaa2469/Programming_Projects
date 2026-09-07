@@ -1,70 +1,72 @@
 @model ProjectManagementSystem.Models.Task
 
 @{
-    ViewData["Title"] = "تعديل المهمة";
+    ViewData["Title"] = "تعديل مهمة";
 }
 
-<h1>تعديل المهمة</h1>
-
-<hr />
-
-<form asp-action="Edit" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-    <input type="hidden" asp-for="Id" />
-
-    <div class="form-group mb-3">
-        <label asp-for="Title" class="control-label">عنوان المهمة</label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
+<section class="page-hero">
+    <div>
+        <span class="page-hero__eyebrow">تحديث البيانات</span>
+        <h1>تعديل المهمة</h1>
+        <p>عدّل المعلومات ثم احفظ التغييرات.</p>
     </div>
+    <partial name="_ModuleSwitch" />
+</section>
 
-    <div class="form-group mb-3">
-        <label asp-for="Description" class="control-label">الوصف</label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
+<div class="panel panel--form">
+    <form asp-action="Edit" class="form-stack">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="UserId" />
+        <input type="hidden" asp-for="ParentTaskId" />
 
-    <div class="form-group mb-3">
-        <label asp-for="Priority" class="control-label">الأولوية</label>
-        <select asp-for="Priority" class="form-control">
-            <option value="">-- اختر الأولوية --</option>
-            <option value="Low">منخفضة</option>
-            <option value="Medium">متوسطة</option>
-            <option value="High">عالية</option>
-        </select>
-        <span asp-validation-for="Priority" class="text-danger"></span>
-    </div>
+        <div class="form-field">
+            <label asp-for="Title"></label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
 
-    <div class="form-group mb-3">
-        <label asp-for="Status" class="control-label">الحالة</label>
-        <select asp-for="Status" class="form-control">
-            <option value="">-- اختر الحالة --</option>
-            <option value="New">جديدة</option>
-            <option value="In Progress">قيد التنفيذ</option>
-            <option value="Done">منجزة</option>
-        </select>
-        <span asp-validation-for="Status" class="text-danger"></span>
-    </div>
+        <div class="form-field">
+            <label asp-for="Description"></label>
+            <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
 
-    <div class="form-group mb-3">
-        <label asp-for="ProjectId" class="control-label">المشروع</label>
-        <select asp-for="ProjectId"
-                class="form-control"
-                asp-items="ViewBag.ProjectId">
-            <option value="">-- اختر المشروع --</option>
-        </select>
-        <span asp-validation-for="ProjectId" class="text-danger"></span>
-    </div>
+        <div class="form-field">
+            <label asp-for="ProjectId"></label>
+            <select asp-for="ProjectId" class="form-control" asp-items="ViewBag.ProjectId">
+                <option value="0">اختر المشروع</option>
+            </select>
+            <span asp-validation-for="ProjectId" class="text-danger"></span>
+        </div>
 
-    <div class="form-group">
-        <input type="submit" value="حفظ التعديلات" class="btn btn-primary" />
-        <a asp-action="Index" class="btn btn-secondary">العودة للمهام</a>
-    </div>
-</form>
+        <div class="form-field">
+            <label asp-for="Priority"></label>
+            <select asp-for="Priority" class="form-control">
+                <option value="منخفضة">منخفضة</option>
+                <option value="متوسطة">متوسطة</option>
+                <option value="عالية">عالية</option>
+            </select>
+            <span asp-validation-for="Priority" class="text-danger"></span>
+        </div>
+
+        <div class="form-field">
+            <label asp-for="Status"></label>
+            <select asp-for="Status" class="form-control">
+                <option value="جديدة">جديدة</option>
+                <option value="قيد التنفيذ">قيد التنفيذ</option>
+                <option value="منجزة">منجزة</option>
+            </select>
+            <span asp-validation-for="Status" class="text-danger"></span>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-app btn-app--primary">حفظ التعديلات</button>
+            <a class="btn-app btn-app--ghost" asp-action="Index">رجوع</a>
+        </div>
+    </form>
+</div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

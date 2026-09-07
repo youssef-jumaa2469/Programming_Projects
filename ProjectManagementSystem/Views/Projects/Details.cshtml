@@ -8,8 +8,9 @@
     <div>
         <span class="page-hero__eyebrow">عرض المشروع</span>
         <h1>@Model.Name</h1>
-        <p>تفاصيل المشروع المحددة.</p>
+        <p>تفاصيل المشروع ومهامه المرتبطة.</p>
     </div>
+    <partial name="_ModuleSwitch" />
 </section>
 
 <div class="panel detail-panel">
@@ -34,6 +35,60 @@
 
     <div class="form-actions" style="margin-top: 1.5rem;">
         <a class="btn-app btn-app--primary" asp-action="Edit" asp-route-id="@Model.Id">تعديل</a>
+        <a class="btn-app btn-app--ghost" asp-controller="Tasks" asp-action="Create" asp-route-projectId="@Model.Id">إضافة مهمة</a>
         <a class="btn-app btn-app--ghost" asp-action="Index">العودة للقائمة</a>
     </div>
 </div>
+
+<section class="page-hero" style="margin-top: 2rem;">
+    <div>
+        <span class="page-hero__eyebrow">مهام المشروع</span>
+        <h2 class="section-title">المهام المرتبطة</h2>
+    </div>
+</section>
+
+@if (Model.Tasks == null || !Model.Tasks.Any())
+{
+    <div class="panel empty-state">
+        <h2>لا توجد مهام لهذا المشروع</h2>
+        <p>أضف أول مهمة لبدء المتابعة.</p>
+        <a class="btn-app btn-app--primary" asp-controller="Tasks" asp-action="Create" asp-route-projectId="@Model.Id">إنشاء مهمة</a>
+    </div>
+}
+else
+{
+    <div class="panel">
+        <table class="projects-table">
+            <thead>
+                <tr>
+                    <th>عنوان المهمة</th>
+                    <th>الوصف</th>
+                    <th>الأولوية</th>
+                    <th>الحالة</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var task in Model.Tasks.OrderByDescending(t => t.Id))
+            {
+                <tr>
+                    <td data-label="عنوان المهمة" class="project-name">@task.Title</td>
+                    <td data-label="الوصف" class="project-desc">@(string.IsNullOrWhiteSpace(task.Description) ? "—" : task.Description)</td>
+                    <td data-label="الأولوية">
+                        <span class="@WorkItemLabels.PriorityClass(task.Priority)">@WorkItemLabels.Priority(task.Priority)</span>
+                    </td>
+                    <td data-label="الحالة">
+                        <span class="@WorkItemLabels.StatusClass(task.Status)">@WorkItemLabels.Status(task.Status)</span>
+                    </td>
+                    <td data-label="الإجراءات">
+                        <div class="row-actions">
+                            <a class="btn-app btn-app--link" asp-controller="Tasks" asp-action="Details" asp-route-id="@task.Id">تفاصيل</a>
+                            <a class="btn-app btn-app--link" asp-controller="Tasks" asp-action="Edit" asp-route-id="@task.Id">تعديل</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}

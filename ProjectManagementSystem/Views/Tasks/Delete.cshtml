@@ -1,37 +1,41 @@
-@model ProjectManagementSystem.Models.Project
+@model ProjectManagementSystem.Models.Task
 
 @{
-    ViewData["Title"] = "حذف مشروع";
+    ViewData["Title"] = "حذف مهمة";
 }
 
 <section class="page-hero">
     <div>
         <span class="page-hero__eyebrow">تأكيد الحذف</span>
-        <h1>حذف المشروع</h1>
+        <h1>حذف المهمة</h1>
         <p>هذا الإجراء لا يمكن التراجع عنه.</p>
     </div>
     <partial name="_ModuleSwitch" />
 </section>
 
 <div class="panel detail-panel">
-    <div class="alert-soft">هل أنت متأكد أنك تريد حذف هذا المشروع؟</div>
+    <div class="alert-soft">هل أنت متأكد أنك تريد حذف هذه المهمة؟</div>
 
     <dl class="detail-list">
         <div>
-            <dt>@Html.DisplayNameFor(model => model.Name)</dt>
-            <dd>@Html.DisplayFor(model => model.Name)</dd>
+            <dt>@Html.DisplayNameFor(model => model.Title)</dt>
+            <dd>@Model.Title</dd>
         </div>
         <div>
             <dt>@Html.DisplayNameFor(model => model.Description)</dt>
             <dd>@(string.IsNullOrWhiteSpace(Model.Description) ? "—" : Model.Description)</dd>
         </div>
         <div>
-            <dt>@Html.DisplayNameFor(model => model.StartDate)</dt>
-            <dd>@Model.StartDate.ToString("yyyy/MM/dd")</dd>
+            <dt>@Html.DisplayNameFor(model => model.Project)</dt>
+            <dd>@(Model.Project?.Name ?? "—")</dd>
         </div>
         <div>
-            <dt>@Html.DisplayNameFor(model => model.EndDate)</dt>
-            <dd>@Model.EndDate.ToString("yyyy/MM/dd")</dd>
+            <dt>@Html.DisplayNameFor(model => model.Priority)</dt>
+            <dd>@WorkItemLabels.Priority(Model.Priority)</dd>
+        </div>
+        <div>
+            <dt>@Html.DisplayNameFor(model => model.Status)</dt>
+            <dd>@WorkItemLabels.Status(Model.Status)</dd>
         </div>
     </dl>
 

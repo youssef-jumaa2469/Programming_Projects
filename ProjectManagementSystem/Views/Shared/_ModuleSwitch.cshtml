@@ -1,0 +1,12 @@
+@{
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+}
+
+<div class="module-switch" role="navigation" aria-label="التنقل بين الأقسام">
+    <a class="module-switch__btn @(controller == "Home" ? "is-active" : null)"
+       asp-controller="Home" asp-action="Index">لوحة الإدارة</a>
+    <a class="module-switch__btn @(controller == "Projects" ? "is-active" : null)"
+       asp-controller="Projects" asp-action="Index">المشاريع</a>
+    <a class="module-switch__btn @(controller == "Tasks" ? "is-active" : null)"
+       asp-controller="Tasks" asp-action="Index">المهام</a>
+</div>
