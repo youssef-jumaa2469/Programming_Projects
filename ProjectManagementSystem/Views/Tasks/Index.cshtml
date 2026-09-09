@@ -1,40 +1,100 @@
 @model IEnumerable<ProjectManagementSystem.Models.Task>
 
 @{
-    ViewData["Title"] = "المهام";
+    ViewData["Title"] = "Tasks";
 }
 
-<h1>المهام</h1>
+<div class="container py-4">
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">إضافة مهمة جديدة</a>
-</p>
+    <div class="d-flex justify-content-between align-items-center mb-3">
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>العنوان</th>
-            <th>الوصف</th>
-            <th>الأولوية</th>
-            <th>الحالة</th>
-            <th>المشروع</th>
-            <th></th>
-        </tr>
-    </thead>
+        <div>
+            <h2 class="fw-bold mb-1">Tasks</h2>
+            <span class="text-muted">
+                Total Tasks: <strong>@Model.Count()</strong>
+            </span>
+        </div>
 
-    <tbody>
-        @foreach (var task in Model)
-        {
-            <tr>
-                <td>@task.Title</td>
-                <td>@task.Description</td>
-                <td>@task.Priority</td>
-                <td>@task.Status</td>
-                <td>@(task.Project?.Name ?? "بدون مشروع")</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@task.Id">تعديل</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+        <a asp-action="Create" class="btn btn-primary">
+            + Add New Task
+        </a>
+
+    </div>
+
+    <div class="card shadow-sm">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle mb-0">
+
+                <thead class="table-light">
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Project</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var task in Model)
+                    {
+                        <tr>
+
+                            <td class="fw-semibold">
+                                @task.Title
+                            </td>
+
+                            <td>
+                                @(task.Description ?? "No description")
+                            </td>
+
+                            <td>
+                                <span class="badge
+                                    @(task.Priority == "High" ? "bg-danger" :
+                                      task.Priority == "Medium" ? "bg-warning text-dark" :
+                                      task.Priority == "Low" ? "bg-info text-dark" :
+                                      "bg-secondary")">
+                                    @(task.Priority ?? "Not Set")
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="badge
+                                    @(task.Status == "New" ? "bg-primary" :
+                                      task.Status == "In Progress" ? "bg-warning text-dark" :
+                                      task.Status == "Done" ? "bg-success" :
+                                      "bg-secondary")">
+                                    @(task.Status ?? "Not Set")
+                                </span>
+                            </td>
+
+                            <td>
+                                @(task.Project?.Name ?? "No Project")
+                            </td>
+
+                            <td class="text-center">
+
+                                <a asp-action="Edit"
+                                   asp-route-id="@task.Id"
+                                   class="btn btn-sm btn-outline-secondary">
+                                    Edit
+                                </a>
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

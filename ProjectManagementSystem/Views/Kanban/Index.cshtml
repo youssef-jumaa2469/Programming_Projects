@@ -1,0 +1,232 @@
+@model IEnumerable<ProjectManagementSystem.Models.Task>
+
+@{
+    ViewData["Title"] = "لوحة المهام";
+}
+
+<div class="container py-4">
+
+    <div class="d-flex justify-content-between mb-4">
+        <h2>لوحة المهام</h2>
+
+        <a asp-controller="Tasks"
+           asp-action="Create"
+           class="btn btn-primary">
+            + إضافة مهمة
+        </a>
+    </div>
+
+    <div class="row g-3">
+
+        <!-- جديد -->
+        <div class="col-md-4">
+            <div class="card">
+
+                <div class="card-header bg-primary text-white">
+                    <strong>
+                        جديد (@Model.Count(t => t.Status == "New"))
+                    </strong>
+                </div>
+
+                <div class="card-body">
+
+                    @foreach (var task in Model.Where(t => t.Status == "New"))
+                    {
+                        <div class="card mb-2">
+                            <div class="card-body">
+
+                                <h6>@task.Title</h6>
+
+                                <small class="text-muted">
+                                    الأولوية: @task.Priority
+                                </small>
+
+                                @{
+                                    var lastLog = task.ActivityLogs
+                                        .OrderByDescending(a => a.ChangedAt)
+                                        .FirstOrDefault();
+                                }
+
+                                @if (lastLog != null)
+                                {
+                                    <br />
+                                    <small class="text-muted">
+                                        آخر تغيير:
+                                        @lastLog.ChangedAt.ToString("dd/MM/yyyy HH:mm")
+                                    </small>
+                                }
+
+                                <form asp-action="UpdateStatus"
+                                      method="post"
+                                      class="mt-2">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="id"
+                                           value="@task.Id" />
+
+                                    <input type="hidden"
+                                           name="newStatus"
+                                           value="In Progress" />
+
+                                    <button class="btn btn-sm btn-primary">
+                                        بدء العمل
+                                    </button>
+
+                                    <a asp-controller="Tasks"
+                                       asp-action="Edit"
+                                       asp-route-id="@task.Id"
+                                       class="btn btn-sm btn-secondary">
+                                        تعديل
+                                    </a>
+
+                                </form>
+
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- قيد العمل -->
+        <div class="col-md-4">
+            <div class="card">
+
+                <div class="card-header bg-warning">
+                    <strong>
+                        قيد العمل (@Model.Count(t => t.Status == "In Progress"))
+                    </strong>
+                </div>
+
+                <div class="card-body">
+
+                    @foreach (var task in Model.Where(t => t.Status == "In Progress"))
+                    {
+                        <div class="card mb-2">
+                            <div class="card-body">
+
+                                <h6>@task.Title</h6>
+
+                                <small class="text-muted">
+                                    الأولوية: @task.Priority
+                                </small>
+
+                                @{
+                                    var lastLog = task.ActivityLogs
+                                        .OrderByDescending(a => a.ChangedAt)
+                                        .FirstOrDefault();
+                                }
+
+                                @if (lastLog != null)
+                                {
+                                    <br />
+                                    <small class="text-muted">
+                                        آخر تغيير:
+                                        @lastLog.ChangedAt.ToString("dd/MM/yyyy HH:mm")
+                                    </small>
+                                }
+
+                                <form asp-action="UpdateStatus"
+                                      method="post"
+                                      class="mt-2">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="id"
+                                           value="@task.Id" />
+
+                                    <input type="hidden"
+                                           name="newStatus"
+                                           value="Done" />
+
+                                    <button class="btn btn-sm btn-success">
+                                        إكمال
+                                    </button>
+
+                                    <a asp-controller="Tasks"
+                                       asp-action="Edit"
+                                       asp-route-id="@task.Id"
+                                       class="btn btn-sm btn-secondary">
+                                        تعديل
+                                    </a>
+
+                                </form>
+
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- منتهي -->
+        <div class="col-md-4">
+            <div class="card">
+
+                <div class="card-header bg-success text-white">
+                    <strong>
+                        منتهي (@Model.Count(t => t.Status == "Done"))
+                    </strong>
+                </div>
+
+                <div class="card-body">
+
+                    @foreach (var task in Model.Where(t => t.Status == "Done"))
+                    {
+                        <div class="card mb-2">
+                            <div class="card-body">
+
+                                <h6>@task.Title</h6>
+
+                                <small class="text-muted">
+                                    الأولوية: @task.Priority
+                                </small>
+
+                                @{
+                                    var lastLog = task.ActivityLogs
+                                        .OrderByDescending(a => a.ChangedAt)
+                                        .FirstOrDefault();
+                                }
+
+                                @if (lastLog != null)
+                                {
+                                    <br />
+                                    <small class="text-muted">
+                                        آخر تغيير:
+                                        @lastLog.ChangedAt.ToString("dd/MM/yyyy HH:mm")
+                                    </small>
+                                }
+
+                                <div class="mt-2">
+
+                                    <span class="badge bg-success">
+                                        مكتملة
+                                    </span>
+
+                                    <a asp-controller="Tasks"
+                                       asp-action="Edit"
+                                       asp-route-id="@task.Id"
+                                       class="btn btn-sm btn-secondary">
+                                        تعديل
+                                    </a>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
