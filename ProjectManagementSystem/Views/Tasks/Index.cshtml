@@ -2,90 +2,39 @@
 
 @{
     ViewData["Title"] = "المهام";
-    var selectedProjectId = ViewBag.ProjectId as int?;
-    var projectOptions = ViewBag.Projects as SelectList;
 }
 
-<section class="page-hero">
-    <div>
-        <span class="page-hero__eyebrow">لوحة المهام</span>
-        <h1>المهام</h1>
-        <p>متابعة المهام حسب المشروع والأولوية والحالة، مع إمكانية الإضافة والتعديل والحذف.</p>
-    </div>
-    <div class="hero-actions">
-        <partial name="_ModuleSwitch" />
-        <a class="btn-app btn-app--primary" asp-action="Create" asp-route-projectId="@selectedProjectId">إضافة مهمة</a>
-    </div>
-</section>
+<h1>المهام</h1>
 
-<form method="get" asp-action="Index" class="filter-bar">
-    <div class="form-field filter-bar__field">
-        <label for="projectId">تصفية حسب المشروع</label>
-        <select id="projectId" name="projectId" class="form-control" onchange="this.form.submit()">
-            <option value="">كل المشاريع</option>
-            @if (projectOptions != null)
-            {
-                foreach (var option in projectOptions)
-                {
-                    if (option.Selected)
-                    {
-                        <option value="@option.Value" selected>@option.Text</option>
-                    }
-                    else
-                    {
-                        <option value="@option.Value">@option.Text</option>
-                    }
-                }
-            }
-        </select>
-    </div>
-</form>
+<p>
+    <a asp-action="Create" class="btn btn-primary">إضافة مهمة جديدة</a>
+</p>
 
-@if (!Model.Any())
-{
-    <div class="panel empty-state">
-        <h2>لا توجد مهام بعد</h2>
-        <p>أضف مهمة جديدة وربطها بأحد المشاريع لتظهر هنا.</p>
-        <a class="btn-app btn-app--primary" asp-action="Create" asp-route-projectId="@selectedProjectId">إنشاء مهمة</a>
-    </div>
-}
-else
-{
-    <div class="panel">
-        <table class="projects-table">
-            <thead>
-                <tr>
-                    <th>@Html.DisplayNameFor(model => model.Title)</th>
-                    <th>@Html.DisplayNameFor(model => model.Description)</th>
-                    <th>@Html.DisplayNameFor(model => model.Project)</th>
-                    <th>@Html.DisplayNameFor(model => model.Priority)</th>
-                    <th>@Html.DisplayNameFor(model => model.Status)</th>
-                    <th>الإجراءات</th>
-                </tr>
-            </thead>
-            <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td data-label="عنوان المهمة" class="project-name">@item.Title</td>
-                    <td data-label="الوصف" class="project-desc">@(string.IsNullOrWhiteSpace(item.Description) ? "—" : item.Description)</td>
-                    <td data-label="المشروع">@(item.Project?.Name ?? "—")</td>
-                    <td data-label="الأولوية">
-                        <span class="@WorkItemLabels.PriorityClass(item.Priority)">@WorkItemLabels.Priority(item.Priority)</span>
-                    </td>
-                    <td data-label="الحالة">
-                        <span class="@WorkItemLabels.StatusClass(item.Status)">@WorkItemLabels.Status(item.Status)</span>
-                    </td>
-                    <td data-label="الإجراءات">
-                        <div class="row-actions">
-                            <a class="btn-app btn-app--link" asp-action="Details" asp-route-id="@item.Id">تفاصيل</a>
-                            <a class="btn-app btn-app--link" asp-action="Edit" asp-route-id="@item.Id">تعديل</a>
-                            <a class="btn-app btn-app--link-danger" asp-action="Delete" asp-route-id="@item.Id">حذف</a>
-                        </div>
-                    </td>
-                </tr>
-            }
-            </tbody>
-        </table>
-    </div>
-}
+<table class="table">
+    <thead>
+        <tr>
+            <th>العنوان</th>
+            <th>الوصف</th>
+            <th>الأولوية</th>
+            <th>الحالة</th>
+            <th>المشروع</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var task in Model)
+        {
+            <tr>
+                <td>@task.Title</td>
+                <td>@task.Description</td>
+                <td>@task.Priority</td>
+                <td>@task.Status</td>
+                <td>@(task.Project?.Name ?? "بدون مشروع")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@task.Id">تعديل</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

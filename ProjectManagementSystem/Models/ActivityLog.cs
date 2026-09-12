@@ -1,6 +1,8 @@
-﻿namespace ProjectManagementSystem.Models
+using System.ComponentModel.DataAnnotations;
+
+namespace ProjectManagementSystem.Models
 {
-    public class ActivityLog
+    public class Task
     {
         public int Id { get; set; }
 
@@ -19,6 +21,9 @@
 
         public int? UserId { get; set; }
 
-        public Task? Task { get; set; }
+        public int? ParentTaskId { get; set; }
+
+        public ICollection<ActivityLog> ActivityLogs { get; set; }
+            = new List<ActivityLog>();
     }
 }
