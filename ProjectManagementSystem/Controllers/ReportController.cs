@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProjectManagementSystem.Data;
+using ProjectManagementSystem.Helpers;
 using ProjectManagementSystem.Models;
 
 namespace ProjectManagementSystem.Controllers
@@ -14,23 +16,43 @@ namespace ProjectManagementSystem.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? projectId)
         {
-            int totalTasks = await _context.Tasks.CountAsync();
+            var query = _context.Tasks.AsNoTracking().AsQueryable();
 
-            int completedTasks = await _context.Tasks
-                .CountAsync(t => t.Status == "منتهي");
+            if (projectId.HasValue)
+            {
+                query = query.Where(t => t.ProjectId == projectId.Value);
+            }
 
-            double completionPercentage = totalTasks == 0
-                ? 0
-                : (double)completedTasks / totalTasks * 100;
+            var tasks = await query.ToListAsync();
+            var completed = tasks.Count(t => WorkItemLabels.IsDone(t.Status));
+            var inProgress = tasks.Count(t => WorkItemLabels.IsInProgress(t.Status));
+            var newly = tasks.Count(t => WorkItemLabels.IsNew(t.Status));
+            var total = tasks.Count;
+
+            ViewBag.Projects = new SelectList(
+                await _context.Projects.OrderBy(p => p.Name).ToListAsync(),
+                "Id",
+                "Name",
+                projectId);
 
             var model = new ReportViewModel
             {
-                TotalTasks = totalTasks,
-                CompletedTasks = completedTasks,
-                RemainingTasks = totalTasks - completedTasks,
-                CompletionPercentage = completionPercentage
+                ProjectId = projectId,
+                ProjectName = projectId.HasValue
+                    ? await _context.Projects
+                        .AsNoTracking()
+                        .Where(p => p.Id == projectId.Value)
+                        .Select(p => p.Name)
+                        .FirstOrDefaultAsync()
+                    : null,
+                TotalTasks = total,
+                NewTasks = newly,
+                InProgressTasks = inProgress,
+                CompletedTasks = completed,
+                RemainingTasks = total - completed,
+                CompletionPercentage = total == 0 ? 0 : (double)completed / total * 100
             };
 
             return View(model);

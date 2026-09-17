@@ -49,6 +49,7 @@ else
                         <div class="row-actions">
                             <a class="btn-app btn-app--link" asp-action="Details" asp-route-id="@item.Id">تفاصيل</a>
                             <a class="btn-app btn-app--link" asp-controller="Tasks" asp-action="Index" asp-route-projectId="@item.Id">المهام</a>
+                            <a class="btn-app btn-app--link" asp-controller="Report" asp-action="Index" asp-route-projectId="@item.Id">تقرير</a>
                             <a class="btn-app btn-app--link" asp-action="Edit" asp-route-id="@item.Id">تعديل</a>
                             <a class="btn-app btn-app--link-danger" asp-action="Delete" asp-route-id="@item.Id">حذف</a>
                         </div>

@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectManagementSystem.Data;
+using ProjectManagementSystem.Helpers;
 using ProjectManagementSystem.Models;
 
 namespace ProjectManagementSystem.Controllers;
@@ -23,8 +24,8 @@ public class HomeController : Controller
         {
             ProjectsCount = await _context.Projects.CountAsync(),
             TasksCount = tasks.Count,
-            InProgressTasksCount = tasks.Count(t => t.Status == "قيد التنفيذ" || t.Status == "In Progress"),
-            DoneTasksCount = tasks.Count(t => t.Status == "منجزة" || t.Status == "Done")
+            InProgressTasksCount = tasks.Count(t => WorkItemLabels.IsInProgress(t.Status)),
+            DoneTasksCount = tasks.Count(t => WorkItemLabels.IsDone(t.Status))
         };
 
         return View(model);

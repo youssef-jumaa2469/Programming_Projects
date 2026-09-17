@@ -14,9 +14,15 @@ namespace ProjectManagementSystem.Helpers
         {
             "New" or "جديدة" => "جديدة",
             "In Progress" or "قيد التنفيذ" => "قيد التنفيذ",
-            "Done" or "منجزة" => "منجزة",
+            "Done" or "منجزة" or "منتهي" or "منتهية" or "مكتملة" => "منجزة",
             _ => string.IsNullOrWhiteSpace(value) ? "—" : value
         };
+
+        public static bool IsDone(string? value) => Status(value) == "منجزة";
+
+        public static bool IsInProgress(string? value) => Status(value) == "قيد التنفيذ";
+
+        public static bool IsNew(string? value) => Status(value) == "جديدة";
 
         public static string PriorityClass(string? value) => Priority(value) switch
         {
