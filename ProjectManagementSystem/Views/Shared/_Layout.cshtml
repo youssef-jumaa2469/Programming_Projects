@@ -28,6 +28,8 @@
                        asp-controller="Projects" asp-action="Index">المشاريع</a>
                     <a class="site-nav__link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Tasks" ? "is-active" : null)"
                        asp-controller="Tasks" asp-action="Index">المهام</a>
+                    <a class="site-nav__link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Kanban" ? "is-active" : null)"
+                       asp-controller="Kanban" asp-action="Index">لوحة المهام</a>
                 </nav>
             </div>
         </header>

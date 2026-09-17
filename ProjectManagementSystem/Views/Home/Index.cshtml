@@ -8,9 +8,8 @@
     <div>
         <span class="page-hero__eyebrow">مركز العمل</span>
         <h1>لوحة الإدارة</h1>
-        <p>انتقل بين المشاريع والمهام من مكان واحد، وتابع حالة العمل بنظرة سريعة.</p>
+        <p>ملخص سريع لحالة المشاريع والمهام من مكان واحد.</p>
     </div>
-    <partial name="_ModuleSwitch" />
 </section>
 
 <div class="stat-grid">
@@ -30,19 +29,4 @@
         <span>المهام المنجزة</span>
         <strong>@Model.DoneTasksCount</strong>
     </article>
-</div>
-
-<div class="dash-grid">
-    <a class="dash-card" asp-controller="Projects" asp-action="Index">
-        <span class="dash-card__eyebrow">إدارة المشاريع</span>
-        <h2>المشاريع</h2>
-        <p>عرض الجداول الزمنية، إضافة مشاريع جديدة، وتحديث بياناتها من شاشة واحدة.</p>
-        <span class="dash-card__action">فتح المشاريع</span>
-    </a>
-    <a class="dash-card" asp-controller="Tasks" asp-action="Index">
-        <span class="dash-card__eyebrow">إدارة المهام</span>
-        <h2>المهام</h2>
-        <p>متابعة الأولويات والحالات، وربط كل مهمة بمشروعها مع إمكانية التعديل والحذف.</p>
-        <span class="dash-card__action">فتح المهام</span>
-    </a>
 </div>

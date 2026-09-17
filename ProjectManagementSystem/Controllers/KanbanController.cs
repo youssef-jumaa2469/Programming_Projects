@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProjectManagementSystem.Data;
+using ProjectManagementSystem.Helpers;
 using ProjectManagementSystem.Models;
 
 namespace ProjectManagementSystem.Controllers
@@ -14,74 +16,62 @@ namespace ProjectManagementSystem.Controllers
             _context = context;
         }
 
-        // عرض لوحة Kanban
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? projectId)
         {
-            var tasks = await _context.Tasks
+            var query = _context.Tasks
                 .Include(t => t.Project)
                 .Include(t => t.ActivityLogs)
                 .AsNoTracking()
-                .ToListAsync();
+                .AsQueryable();
 
-            foreach (var task in tasks)
+            if (projectId.HasValue)
             {
-                if (string.IsNullOrWhiteSpace(task.Status))
-                {
-                    task.Status = "New";
-                    continue;
-                }
-
-                var status = task.Status.Trim();
-
-                if (status.Equals("New", StringComparison.OrdinalIgnoreCase))
-                {
-                    task.Status = "New";
-                }
-                else if (status.Equals("In Progress", StringComparison.OrdinalIgnoreCase))
-                {
-                    task.Status = "In Progress";
-                }
-                else if (status.Equals("Done", StringComparison.OrdinalIgnoreCase))
-                {
-                    task.Status = "Done";
-                }
+                query = query.Where(t => t.ProjectId == projectId.Value);
             }
 
-            return View(tasks);
+            ViewBag.ProjectId = projectId;
+            ViewBag.Projects = new SelectList(
+                await _context.Projects.OrderBy(p => p.Name).ToListAsync(),
+                "Id",
+                "Name",
+                projectId);
+
+            return View(await query.OrderByDescending(t => t.Id).ToListAsync());
         }
 
-        // تغيير حالة المهمة وتسجيل الحركة
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateStatus(int id, string newStatus)
+        public async Task<IActionResult> UpdateStatus(int id, string newStatus, int? projectId)
         {
             var task = await _context.Tasks.FindAsync(id);
-
             if (task == null)
             {
                 return NotFound();
             }
 
-            var oldStatus = task.Status?.Trim();
-
-            if (!string.Equals(oldStatus, newStatus, StringComparison.OrdinalIgnoreCase))
+            var normalizedStatus = WorkItemLabels.Status(newStatus);
+            if (normalizedStatus == "—")
             {
-                task.Status = newStatus;
+                return RedirectToAction(nameof(Index), new { projectId });
+            }
 
-                var activityLog = new ActivityLog
+            var oldStatus = WorkItemLabels.Status(task.Status);
+            if (!string.Equals(oldStatus, normalizedStatus, StringComparison.Ordinal))
+            {
+                task.Status = normalizedStatus;
+
+                _context.ActivityLogs.Add(new ActivityLog
                 {
                     TaskId = task.Id,
-                    OldStatus = oldStatus,
-                    NewStatus = newStatus,
+                    OldStatus = oldStatus == "—" ? task.Status : oldStatus,
+                    NewStatus = normalizedStatus,
                     ChangedAt = DateTime.Now
-                };
-
-                _context.ActivityLogs.Add(activityLog);
+                });
 
                 await _context.SaveChangesAsync();
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { projectId });
         }
     }
 }
