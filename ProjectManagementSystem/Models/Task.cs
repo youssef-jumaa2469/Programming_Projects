@@ -32,5 +32,7 @@ namespace ProjectManagementSystem.Models
         public int? UserId { get; set; }
 
         public int? ParentTaskId { get; set; }
+
+        public ICollection<ActivityLog> ActivityLogs { get; set; } = new List<ActivityLog>();
     }
 }

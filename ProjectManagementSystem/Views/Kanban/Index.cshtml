@@ -1,0 +1,164 @@
+@model IEnumerable<ProjectManagementSystem.Models.Task>
+
+@{
+    ViewData["Title"] = "لوحة المتابعة";
+    var selectedProjectId = ViewBag.ProjectId as int?;
+    var projectOptions = ViewBag.Projects as SelectList;
+    var newTasks = Model.Where(t => WorkItemLabels.Status(t.Status) == "جديدة").ToList();
+    var progressTasks = Model.Where(t => WorkItemLabels.Status(t.Status) == "قيد التنفيذ").ToList();
+    var doneTasks = Model.Where(t => WorkItemLabels.Status(t.Status) == "منجزة").ToList();
+}
+
+<section class="page-hero">
+    <div>
+        <span class="page-hero__eyebrow">متابعة العمل</span>
+        <h1>لوحة المهام</h1>
+        <p>حرّك المهام بين الحالات الثلاث، مع إمكانية التصفية حسب المشروع.</p>
+    </div>
+    <a class="btn-app btn-app--primary" asp-controller="Tasks" asp-action="Create" asp-route-projectId="@selectedProjectId">إضافة مهمة</a>
+</section>
+
+<form method="get" asp-action="Index" class="filter-bar">
+    <div class="form-field filter-bar__field">
+        <label for="projectId">تصفية حسب المشروع</label>
+        <select id="projectId" name="projectId" class="form-control" onchange="this.form.submit()">
+            <option value="">كل المشاريع</option>
+            @if (projectOptions != null)
+            {
+                foreach (var option in projectOptions)
+                {
+                    if (option.Selected)
+                    {
+                        <option value="@option.Value" selected>@option.Text</option>
+                    }
+                    else
+                    {
+                        <option value="@option.Value">@option.Text</option>
+                    }
+                }
+            }
+        </select>
+    </div>
+</form>
+
+@if (!Model.Any())
+{
+    <div class="panel empty-state">
+        <h2>لا توجد مهام للمتابعة</h2>
+        <p>@(selectedProjectId.HasValue ? "لا توجد مهام ضمن المشروع المحدد." : "أنشئ مهمة أولاً لتظهر على اللوحة.")</p>
+        <a class="btn-app btn-app--primary" asp-controller="Tasks" asp-action="Create" asp-route-projectId="@selectedProjectId">إنشاء مهمة</a>
+    </div>
+}
+else
+{
+    <div class="kanban-board">
+        <section class="kanban-column">
+            <header class="kanban-column__header">
+                <h2>جديدة</h2>
+                <span>@newTasks.Count</span>
+            </header>
+            <div class="kanban-column__body">
+                @if (!newTasks.Any())
+                {
+                    <p class="kanban-empty">لا توجد مهام جديدة.</p>
+                }
+                @foreach (var task in newTasks)
+                {
+                    <article class="kanban-card">
+                        <h3>@task.Title</h3>
+                        <p>@(task.Project?.Name ?? "بدون مشروع")</p>
+                        <span class="@WorkItemLabels.PriorityClass(task.Priority)">@WorkItemLabels.Priority(task.Priority)</span>
+                        @{
+                            var lastLog = task.ActivityLogs?.OrderByDescending(a => a.ChangedAt).FirstOrDefault();
+                        }
+                        @if (lastLog != null)
+                        {
+                            <small>آخر تغيير: @lastLog.ChangedAt.ToString("yyyy/MM/dd HH:mm")</small>
+                        }
+                        <div class="kanban-card__actions">
+                            <form asp-action="UpdateStatus" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@task.Id" />
+                                <input type="hidden" name="newStatus" value="قيد التنفيذ" />
+                                <input type="hidden" name="projectId" value="@selectedProjectId" />
+                                <button type="submit" class="btn-app btn-app--primary btn-app--sm">بدء العمل</button>
+                            </form>
+                            <a class="btn-app btn-app--ghost btn-app--sm" asp-controller="Tasks" asp-action="Edit" asp-route-id="@task.Id">تعديل</a>
+                        </div>
+                    </article>
+                }
+            </div>
+        </section>
+
+        <section class="kanban-column">
+            <header class="kanban-column__header kanban-column__header--progress">
+                <h2>قيد التنفيذ</h2>
+                <span>@progressTasks.Count</span>
+            </header>
+            <div class="kanban-column__body">
+                @if (!progressTasks.Any())
+                {
+                    <p class="kanban-empty">لا توجد مهام قيد التنفيذ.</p>
+                }
+                @foreach (var task in progressTasks)
+                {
+                    <article class="kanban-card">
+                        <h3>@task.Title</h3>
+                        <p>@(task.Project?.Name ?? "بدون مشروع")</p>
+                        <span class="@WorkItemLabels.PriorityClass(task.Priority)">@WorkItemLabels.Priority(task.Priority)</span>
+                        @{
+                            var lastLog = task.ActivityLogs?.OrderByDescending(a => a.ChangedAt).FirstOrDefault();
+                        }
+                        @if (lastLog != null)
+                        {
+                            <small>آخر تغيير: @lastLog.ChangedAt.ToString("yyyy/MM/dd HH:mm")</small>
+                        }
+                        <div class="kanban-card__actions">
+                            <form asp-action="UpdateStatus" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@task.Id" />
+                                <input type="hidden" name="newStatus" value="منجزة" />
+                                <input type="hidden" name="projectId" value="@selectedProjectId" />
+                                <button type="submit" class="btn-app btn-app--primary btn-app--sm">إكمال</button>
+                            </form>
+                            <a class="btn-app btn-app--ghost btn-app--sm" asp-controller="Tasks" asp-action="Edit" asp-route-id="@task.Id">تعديل</a>
+                        </div>
+                    </article>
+                }
+            </div>
+        </section>
+
+        <section class="kanban-column">
+            <header class="kanban-column__header kanban-column__header--done">
+                <h2>منجزة</h2>
+                <span>@doneTasks.Count</span>
+            </header>
+            <div class="kanban-column__body">
+                @if (!doneTasks.Any())
+                {
+                    <p class="kanban-empty">لا توجد مهام منجزة بعد.</p>
+                }
+                @foreach (var task in doneTasks)
+                {
+                    <article class="kanban-card">
+                        <h3>@task.Title</h3>
+                        <p>@(task.Project?.Name ?? "بدون مشروع")</p>
+                        <span class="@WorkItemLabels.PriorityClass(task.Priority)">@WorkItemLabels.Priority(task.Priority)</span>
+                        <span class="badge-status badge-status--done">مكتملة</span>
+                        @{
+                            var lastLog = task.ActivityLogs?.OrderByDescending(a => a.ChangedAt).FirstOrDefault();
+                        }
+                        @if (lastLog != null)
+                        {
+                            <small>آخر تغيير: @lastLog.ChangedAt.ToString("yyyy/MM/dd HH:mm")</small>
+                        }
+                        <div class="kanban-card__actions">
+                            <a class="btn-app btn-app--ghost btn-app--sm" asp-controller="Tasks" asp-action="Details" asp-route-id="@task.Id">تفاصيل</a>
+                            <a class="btn-app btn-app--ghost btn-app--sm" asp-controller="Tasks" asp-action="Edit" asp-route-id="@task.Id">تعديل</a>
+                        </div>
+                    </article>
+                }
+            </div>
+        </section>
+    </div>
+}

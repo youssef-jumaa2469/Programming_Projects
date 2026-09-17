@@ -12,10 +12,7 @@
         <h1>المهام</h1>
         <p>متابعة المهام حسب المشروع والأولوية والحالة، مع إمكانية الإضافة والتعديل والحذف.</p>
     </div>
-    <div class="hero-actions">
-        <partial name="_ModuleSwitch" />
-        <a class="btn-app btn-app--primary" asp-action="Create" asp-route-projectId="@selectedProjectId">إضافة مهمة</a>
-    </div>
+    <a class="btn-app btn-app--primary" asp-action="Create" asp-route-projectId="@selectedProjectId">إضافة مهمة</a>
 </section>
 
 <form method="get" asp-action="Index" class="filter-bar">
@@ -45,7 +42,7 @@
 {
     <div class="panel empty-state">
         <h2>لا توجد مهام بعد</h2>
-        <p>أضف مهمة جديدة وربطها بأحد المشاريع لتظهر هنا.</p>
+        <p>أضف مهمة جديدة واربطها بأحد المشاريع لتظهر هنا.</p>
         <a class="btn-app btn-app--primary" asp-action="Create" asp-route-projectId="@selectedProjectId">إنشاء مهمة</a>
     </div>
 }
