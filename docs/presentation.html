@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>عرض الفريق · نظام إدارة المشاريع</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Readex+Pro:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #0f2438;
+      --ink-soft: #3d5266;
+      --muted: #6b7c8f;
+      --accent: #0d7377;
+      --accent-deep: #095456;
+      --line: rgba(15, 36, 56, 0.12);
+      --surface: rgba(255, 255, 255, 0.88);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      height: 100%;
+      font-family: "IBM Plex Sans Arabic", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(900px 500px at 100% -10%, rgba(13, 115, 119, 0.18), transparent 55%),
+        linear-gradient(160deg, #e7eef4, #f3f6f8 45%, #dce8e7);
+    }
+
+    .deck {
+      height: 100%;
+      display: grid;
+      place-items: center;
+      padding: 1.5rem;
+    }
+
+    .slide {
+      display: none;
+      width: min(960px, 100%);
+      min-height: 560px;
+      padding: 3rem 3.2rem;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 18px 40px rgba(15, 36, 56, 0.08);
+    }
+
+    .slide.is-active { display: block; }
+
+    .eyebrow {
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+    }
+
+    h1, h2 {
+      font-family: "Readex Pro", sans-serif;
+      margin: 0 0 1rem;
+      letter-spacing: -0.03em;
+    }
+
+    h1 { font-size: clamp(2rem, 4vw, 3rem); }
+    h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
+
+    p, li { color: var(--ink-soft); line-height: 1.8; font-size: 1.12rem; }
+    ul { padding-inline-start: 1.3rem; }
+    li { margin: 0.45rem 0; }
+
+    .meta {
+      margin-top: 2rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1.4rem;
+    }
+
+    .card {
+      padding: 1rem 1.1rem;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+    }
+
+    .card strong {
+      display: block;
+      margin-bottom: 0.35rem;
+      color: var(--ink);
+    }
+
+    .nav {
+      position: fixed;
+      bottom: 1.2rem;
+      inset-inline: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.8rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 0.45rem 0.9rem;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    button:hover { border-color: var(--accent); color: var(--accent-deep); }
+
+    @media (max-width: 720px) {
+      .slide { padding: 1.5rem; min-height: auto; }
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      .nav { display: none; }
+      .slide { display: block !important; break-after: page; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck">
+    <section class="slide is-active">
+      <div class="eyebrow">عرض الفريق</div>
+      <h1>نظام إدارة المشاريع</h1>
+      <p>تقديم يشرح كيف عمل الفريق، وما التحديات التي واجهناها، والقرارات الإدارية التي اتخذناها حتى اكتمال المشروع.</p>
+      <p class="meta">مشروع تخرج الفريق · ASP.NET Core MVC</p>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">ما الذي بنيناه؟</div>
+      <h2>نظام متابعة عربي موحّد</h2>
+      <p>تطبيق ويب يدير المشاريع والمهام من مكان واحد، مع لوحة متابعة وتقارير إنجاز.</p>
+      <div class="grid">
+        <div class="card"><strong>لوحة الإدارة</strong>ملخص الأعداد والحالات</div>
+        <div class="card"><strong>المشاريع والمهام</strong>إضافة، تعديل، حذف، وتصفية</div>
+        <div class="card"><strong>لوحة المهام</strong>نقل الحالة: جديدة / قيد التنفيذ / منجزة</div>
+        <div class="card"><strong>التقارير</strong>نسبة الإنجاز حسب المشروع</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">قرار إداري أساسي</div>
+      <h2>تقسيم العمل على فروع ثم الدمج</h2>
+      <ul>
+        <li>كل عضو يعمل على ميزة مستقلة حتى لا يتعطل الآخرون.</li>
+        <li>فروع العمل: المشاريع، المهام، لوحة المهام، التقارير.</li>
+        <li>الدمج يتم على <strong>dev</strong> بعد المراجعة.</li>
+        <li>عند الانتهاء نُقلت النسخة النهائية إلى <strong>main</strong>.</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">تحدٍّ 1</div>
+      <h2>تضارب العمل عند الدمج</h2>
+      <p>بعد جمع الفروع، اختفت روابط لوحة المهام والتقارير من القائمة، رغم أن الشاشات كانت موجودة في المشروع.</p>
+      <div class="grid">
+        <div class="card"><strong>المشكلة</strong>ملفات مشتركة مثل التخطيط العام تتعارض بين الفروع.</div>
+        <div class="card"><strong>القرار</strong>مراجعة الدمج على dev قبل الاعتماد، ثم تثبيت القائمة النهائية في الهيدر.</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">تحدٍّ 2</div>
+      <h2>اختلاف شكل الشاشات</h2>
+      <p>شاشة المهام ولوحة المهام والتقارير بدأت بتصاميم مختلفة عن شاشة المشاريع.</p>
+      <ul>
+        <li>القرار: اعتماد هوية واحدة لكل النظام.</li>
+        <li>نفس الألوان، الخطوط العربية، الجداول، والأزرار.</li>
+        <li>رفض أي شاشة تخرج عن هذا الإطار حتى لو كانت جاهزة وظيفياً.</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">تحدٍّ 3</div>
+      <h2>تكرار أزرار التنقّل</h2>
+      <p>كانت أزرار الانتقال موجودة في الهيدر وداخل الشاشات أيضاً، وهذا شوّش المستخدم.</p>
+      <div class="grid">
+        <div class="card"><strong>القرار الإداري</strong>التنقّل بين الأقسام يكون من الهيدر فقط.</div>
+        <div class="card"><strong>النتيجة</strong>داخل الصفحة يبقى زر الإجراء فقط، مثل إضافة مهمة أو مشروع.</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">تحدٍّ 4</div>
+      <h2>اختلاف بيانات الحالة والأولوية</h2>
+      <p>بعض الشاشات خزّنت الحالة بالإنجليزية مثل Done، وأخرى بالعربية مثل منجزة أو منتهي. التقارير كانت تحسب الإنجاز صفراً.</p>
+      <ul>
+        <li>القرار: توحيد القيم المعروضة بالعربية.</li>
+        <li>إنشاء طبقة مساعدة واحدة لترجمة الحالة والأولوية.</li>
+        <li>التقارير ولوحة المهام ولوحة الإدارة تقرأ من نفس القاعدة.</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">تحدٍّ 5</div>
+      <h2>متابعة المهام بدون سياق المشروع</h2>
+      <p>لوحة المهام كانت تعرض كل المهام معاً، وهذا غير عملي عندما يزيد عدد المشاريع.</p>
+      <div class="grid">
+        <div class="card"><strong>القرار</strong>إضافة فلتر حسب المشروع في المهام، ولوحة المهام، والتقارير.</div>
+        <div class="card"><strong>الأثر</strong>المدير يرى تقدم مشروع محدد بدلاً من خليط عام.</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">كيف أدِرْنا الجودة؟</div>
+      <h2>قرارات ثابتة حتى نهاية المشروع</h2>
+      <ul>
+        <li>العربية أولاً: الواجهة والبيانات والعناوين.</li>
+        <li>لا تُقبل ميزة بدون ارتباط واضح بالمشروع.</li>
+        <li>لا تُرفع نسخة نهائية وفيها شاشة معزولة عن القائمة.</li>
+        <li>أي تعارض بعد الدمج يُعالج على dev قبل النقل إلى main.</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">الخلاصة</div>
+      <h2>أنهينا المشروع كفريق</h2>
+      <p>النظام جاهز على الفرع الرئيسي: إدارة مشاريع، مهام، لوحة متابعة، وتقارير. التحديات لم تكن تقنية فقط، بل قرارات تنظيمية حول طريقة العمل والشكل الموحّد وتجربة المستخدم.</p>
+      <p class="meta">شكراً لكم</p>
+    </section>
+  </main>
+
+  <div class="nav">
+    <button type="button" id="prev">السابق</button>
+    <span id="counter"></span>
+    <button type="button" id="next">التالي</button>
+  </div>
+
+  <script>
+    const slides = [...document.querySelectorAll(".slide")];
+    const counter = document.getElementById("counter");
+    let index = 0;
+
+    function show(i) {
+      index = Math.max(0, Math.min(slides.length - 1, i));
+      slides.forEach((slide, n) => slide.classList.toggle("is-active", n === index));
+      counter.textContent = (index + 1) + " / " + slides.length;
+    }
+
+    document.getElementById("prev").onclick = () => show(index - 1);
+    document.getElementById("next").onclick = () => show(index + 1);
+    document.addEventListener("keydown", (e) => {
+      if (["ArrowRight", "ArrowUp", "Backspace"].includes(e.key)) show(index - 1);
+      if (["ArrowLeft", "ArrowDown", " ", "Enter"].includes(e.key)) {
+        e.preventDefault();
+        show(index + 1);
+      }
+    });
+
+    show(0);
+  </script>
+</body>
+</html>
